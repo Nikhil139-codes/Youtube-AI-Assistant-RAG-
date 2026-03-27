@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube AI Assistant</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #38bdf8;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        input {
+            width: 300px;
+        }
+
+        button {
+            background: #38bdf8;
+            color: black;
+            cursor: pointer;
+        }
+
+        #chat {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 600px;
+            margin-inline: auto;
+        }
+
+        .msg {
+            background: #1e293b;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🎥 YouTube AI Assistant</h1>
+
+    <!-- VIDEO INPUT -->
+    <input id="video" placeholder="Enter YouTube Video URL or ID" />
+    <br>
+
+    <!-- QUESTION INPUT -->
+    <input id="question" placeholder="Ask something..." />
+    <br>
+
+    <button onclick="ask()">Ask AI</button>
+
+    <!-- CHAT -->
+    <div id="chat"></div>
+
+<script>
+async function ask() {
+
+    const videoInput = document.getElementById("video").value;
+    const question = document.getElementById("question").value;
+    const chat = document.getElementById("chat");
+
+    // Extract video ID
+    let videoId = videoInput;
+    if (videoInput.includes("youtube.com")) {
+        videoId = new URLSearchParams(new URL(videoInput).search).get("v");
+    }
+
+    // Show user msg
+    chat.innerHTML += `<div class="msg"><b>You:</b> ${question}</div>`;
+
+    try {
+        const res = await fetch("http://127.0.0.1:5000/ask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                video_id: videoId,
+                question: question
+            })
+        });
+
+        const data = await res.json();
+
+        chat.innerHTML += `<div class="msg"><b>AI:</b> ${data.answer}</div>`;
+
+    } catch (err) {
+        chat.innerHTML += `<div class="msg"><b>Error:</b> Backend not reachable</div>`;
+    }
+}
+</script>
+
+</body>
+</html>
