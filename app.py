@@ -1,0 +1,32 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from rag import ask_rag
+
+app = Flask(__name__)
+CORS(app)
+
+# -----------------------------
+# ROUTE
+# -----------------------------
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.json
+
+    video_id = data.get("video_id")
+    question = data.get("question")
+
+    if not video_id or not question:
+        return jsonify({"error": "Missing data"}), 400
+
+    try:
+        answer = ask_rag(video_id, question)
+        return jsonify({"answer": answer})
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+# -----------------------------
+# RUN
+# -----------------------------
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

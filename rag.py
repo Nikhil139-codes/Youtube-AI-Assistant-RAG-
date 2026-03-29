@@ -1,15 +1,15 @@
 # -----------------------------
-# ✅ IMPORTS
+# IMPORTS
 # -----------------------------
 from youtube_transcript_api import YouTubeTranscriptApi
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_core.prompts import PromptTemplate
-from langchain_core.runnables import RunnableParallel, RunnablePassthrough, RunnableLambda
-from langchain_core.output_parsers import StrOutputParser
 from langchain_groq import ChatGroq
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # -----------------------------
 # 🔑 GROQ API KEY
@@ -19,96 +19,134 @@ import os
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 # -----------------------------
-# 🎥 VIDEO ID
+# 🔥 CACHE (FAST RESPONSE)
 # -----------------------------
-video_id = "dQw4w9WgXcQ"
+vector_store_cache = {}
 
 # -----------------------------
-# 📜 GET TRANSCRIPT
+# 📺 LOAD VIDEO (Hindi + English)
 # -----------------------------
-try:
-    api = YouTubeTranscriptApi()
-    transcript_data = api.fetch(video_id)
-    transcript = " ".join(chunk.text for chunk in transcript_data)
-    print("✅ Transcript fetched")
-except Exception as e:
-    print("❌ Error:", e)
-    exit()
+def load_video(video_id):
 
-if not transcript.strip():
-    print("❌ Empty transcript")
-    exit()
+    # Cache check
+    if video_id in vector_store_cache:
+        return vector_store_cache[video_id]
+
+    try:
+        api = YouTubeTranscriptApi()
+
+        # 🔥 Step 1: Get all transcripts
+        transcript_list = api.list(video_id)
+
+        # 🔥 Step 2: Try Hindi first
+        try:
+            transcript_obj = transcript_list.find_transcript(['hi'])
+            print("✅ Hindi transcript loaded")
+        except:
+            # 🔥 Step 3: fallback to English
+            try:
+                transcript_obj = transcript_list.find_transcript(['en'])
+                print("✅ English transcript loaded")
+            except:
+                # 🔥 Step 4: fallback to ANY language
+                transcript_obj = transcript_list.find_transcript(
+                    [t.language_code for t in transcript_list]
+                )
+                print("⚠ Using other language transcript")
+
+        # 🔥 Step 5: Fetch transcript
+        fetched = transcript_obj.fetch()
+        transcript = " ".join(chunk.text for chunk in fetched)
+
+    except Exception as e:
+        raise Exception("❌ No transcript available for this video")
+
+    if not transcript.strip():
+        raise Exception("❌ Empty transcript")
+
+    # -----------------------------
+    # ✂ Split text
+    # -----------------------------
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200
+    )
+
+    docs = splitter.create_documents([transcript])
+
+    # -----------------------------
+    # 🔎 Embeddings
+    # -----------------------------
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    vector_store = FAISS.from_documents(docs, embeddings)
+
+    # Cache store
+    vector_store_cache[video_id] = vector_store
+
+    return vector_store
+
 
 # -----------------------------
-# ✂️ SPLIT TEXT
+# 🤖 ASK FUNCTION
 # -----------------------------
-splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,
-    chunk_overlap=200
-)
-docs = splitter.create_documents([transcript])
+def ask_rag(video_id, question):
 
-# -----------------------------
-# 🔍 EMBEDDINGS
-# -----------------------------
-embeddings = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
-)
+    try:
+        vector_store = load_video(video_id)
 
-# -----------------------------
-# 🧠 VECTOR STORE
-# -----------------------------
-vector_store = FAISS.from_documents(docs, embeddings)
-retriever = vector_store.as_retriever(search_kwargs={"k": 2})
+        retriever = vector_store.as_retriever(search_kwargs={"k": 3})
+        docs = retriever.invoke(question)
 
-# -----------------------------
-# 🤖 GROQ LLM (FINAL 🔥)
-# -----------------------------
-llm = ChatGroq(
-    model="llama-3.1-8b-instant",   # 🔥 best free model
-    api_key=GROQ_API_KEY,
-    temperature=0.3
-)
+        if not docs:
+            return "❌ No relevant content found"
 
-# -----------------------------
-# 📝 PROMPT
-# -----------------------------
-prompt = PromptTemplate(
-    template="""
+        context = "\n\n".join(doc.page_content for doc in docs)
+
+        # -----------------------------
+        # 🤖 LLM (Groq)
+        # -----------------------------
+        llm = ChatGroq(
+            model="llama-3.1-8b-instant",
+            api_key=GROQ_API_KEY,
+            temperature=0.3
+        )
+
+        prompt = f"""
+You are an AI assistant.
+
 Context:
 {context}
 
 Question:
 {question}
 
-Give a short and clear answer in 2-3 lines only.
+Answer in same language as the question.
+Keep answer short (2-3 lines).
 If not found, say: I don't know.
-""",
-    input_variables=["context", "question"]
-)
+"""
+
+        response = llm.invoke(prompt)
+
+        return response.content
+
+    except Exception as e:
+        return str(e)
+
 
 # -----------------------------
-# 🔄 FORMAT DOCS
+# 💬 TEST (OPTIONAL)
 # -----------------------------
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
+if __name__ == "__main__":
 
-# -----------------------------
-# 🔗 RAG CHAIN
-# -----------------------------
-chain = RunnableParallel({
-    "context": retriever | RunnableLambda(format_docs),
-    "question": RunnablePassthrough()
-}) | prompt | llm | StrOutputParser()
+    while True:
+        video_id = input("\n🎥 Enter video ID: ")
+        question = input("💬 Ask: ")
 
-# -----------------------------
-# 💬 CHAT LOOP
-# -----------------------------
-while True:
-    query = input("\n💬 Ask something (type 'exit'): ")
+        if question.lower() == "exit":
+            break
 
-    if query.lower() == "exit":
-        break
-
-    answer = chain.invoke(query)
-    print("\n🤖 Answer:\n", answer)
+        answer = ask_rag(video_id, question)
+        print("\n🤖 Answer:", answer)
