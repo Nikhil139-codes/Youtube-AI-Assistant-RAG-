@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,8 +81,13 @@
         }
 
         @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 50px) scale(1.1); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(50px, 50px) scale(1.1);
+            }
         }
 
         h1 {
@@ -139,14 +145,29 @@
             cursor: pointer;
             animation: fadeInUp 0.8s ease backwards;
         }
-        
-        .flip-card:nth-child(1) { animation-delay: 0.1s; }
-        .flip-card:nth-child(2) { animation-delay: 0.3s; }
-        .flip-card:nth-child(3) { animation-delay: 0.5s; }
+
+        .flip-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .flip-card:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .flip-card:nth-child(3) {
+            animation-delay: 0.5s;
+        }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .flip-card-inner {
@@ -162,7 +183,8 @@
             transform: rotateY(180deg);
         }
 
-        .flip-card-front, .flip-card-back {
+        .flip-card-front,
+        .flip-card-back {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -180,11 +202,11 @@
         }
 
         .flip-card-front {
-            background: linear-gradient(145deg, rgba(30,41,59,0.8), rgba(15,23,42,0.9));
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
         }
 
         .flip-card-back {
-            background: linear-gradient(145deg, rgba(56,189,248,0.1), rgba(129,140,248,0.1));
+            background: linear-gradient(145deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 248, 0.1));
             border: 1px solid rgba(129, 140, 248, 0.3);
             transform: rotateY(180deg);
         }
@@ -242,7 +264,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transform: translateX(100%); /* Hidden initially to the right */
+            transform: translateX(100%);
+            /* Hidden initially to the right */
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
             z-index: 10;
             background: rgba(2, 6, 23, 0.8);
@@ -251,7 +274,8 @@
         }
 
         #chatbot-page.active {
-            transform: translateX(0); /* Slide in */
+            transform: translateX(0);
+            /* Slide in */
         }
 
         .chat-container {
@@ -299,14 +323,22 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
         }
 
         .btn-close {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #cbd5e1;
             padding: 10px 20px;
             border-radius: 20px;
@@ -316,7 +348,7 @@
         }
 
         .btn-close:hover {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             color: white;
         }
 
@@ -341,8 +373,15 @@
         }
 
         @keyframes fadeInMsg {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .msg.user {
@@ -398,7 +437,7 @@
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
             background: rgba(255, 255, 255, 0.08);
         }
-        
+
         #video {
             border-bottom: 2px solid rgba(255, 255, 255, 0.2);
         }
@@ -434,10 +473,22 @@
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
 
         /* Loading Animation */
         .loading-dots {
@@ -446,6 +497,7 @@
             padding: 8px 4px;
             align-items: center;
         }
+
         .dot {
             width: 10px;
             height: 10px;
@@ -453,12 +505,29 @@
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out both;
         }
-        .dot:nth-child(1) { animation-delay: -0.32s; }
-        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
 
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; background: var(--primary); }
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+
+            40% {
+                transform: scale(1);
+                opacity: 1;
+                background: var(--primary);
+            }
         }
 
         /* Small link helper for video input */
@@ -471,12 +540,12 @@
             letter-spacing: 1px;
             font-weight: 600;
         }
-
     </style>
 </head>
+
 <body>
 
-    <!-- Soft glowing orbs in the background -->
+    <!-- SoAt glowing orbs in the background -->
     <div class="bg-orbs">
         <canvas id="ai-network"></canvas>
         <div class="orb orb-1"></div>
@@ -486,7 +555,8 @@
     <!-- LANDING PAGE -->
     <div id="landing-page">
         <h1>YouTube AI Assistant</h1>
-        <p class="subtitle">Unlock the power of AI to summarize, analyze, and instantly chat with any YouTube video. Just drop the link and start asking questions.</p>
+        <p class="subtitle">Unlock the power of AI to summarize, analyze, and instantly chat with any YouTube video.
+            Just drop the link and start asking questions.</p>
 
         <div class="cards-container">
             <!-- Card 1 -->
@@ -499,7 +569,8 @@
                     </div>
                     <div class="flip-card-back">
                         <h3>Save Time</h3>
-                        <p>Don't watch hours of content. Our AI reads the transcript and gives you exactly the information you need in seconds.</p>
+                        <p>Don't watch hours of content. Our AI reads the transcript and gives you exactly the
+                            information you need in seconds.</p>
                     </div>
                 </div>
             </div>
@@ -514,7 +585,8 @@
                     </div>
                     <div class="flip-card-back">
                         <h3>Interactive Chat</h3>
-                        <p>Have a conversation with the video. Ask specific questions, request code snippets, or get step-by-step explanations.</p>
+                        <p>Have a conversation with the video. Ask specific questions, request code snippets, or get
+                            step-by-step explanations.</p>
                     </div>
                 </div>
             </div>
@@ -529,7 +601,8 @@
                     </div>
                     <div class="flip-card-back">
                         <h3>Context Aware</h3>
-                        <p>Powered by advanced RAG technology, the assistant understands the deep context of the video to give highly accurate answers.</p>
+                        <p>Powered by advanced RAG technology, the assistant understands the deep context of the video
+                            to give highly accurate answers.</p>
                     </div>
                 </div>
             </div>
@@ -543,12 +616,15 @@
     <div id="chatbot-page">
         <div class="chat-container">
             <div class="chat-header">
-                <h2><div class="ai-status"></div> Nexus AI</h2>
+                <h2>
+                    <div class="ai-status"></div> Nexus AI
+                </h2>
                 <button class="btn-close" onclick="closeChat()">Back Home</button>
             </div>
-            
+
             <div class="chat-body" id="chat">
-                <div class="msg ai">Hello! I'm your AI assistant for YouTube videos. Provide a video URL and ask me anything about it.</div>
+                <div class="msg ai">Hello! I'm your AI assistant for YouTube videos. Provide a video URL and ask me
+                    anything about it.</div>
             </div>
 
             <div class="chat-input-area">
@@ -556,10 +632,11 @@
                 <div class="input-group">
                     <input id="video" placeholder="🔗 Enter YouTube Video URL or ID" autocomplete="off" />
                 </div>
-                
+
                 <div class="input-label" style="margin-top: 5px;">Query</div>
                 <div class="input-group">
-                    <input id="question" placeholder="💭 Ask something about the video..." autocomplete="off" onkeypress="handleKeyPress(event)" />
+                    <input id="question" placeholder="💭 Ask something about the video..." autocomplete="off"
+                        onkeypress="handleKeyPress(event)" />
                     <button class="btn-ask" id="askBtn" onclick="ask()">Send 🚀</button>
                 </div>
             </div>
@@ -596,14 +673,14 @@
             const chat = document.getElementById("chat");
             const msgDiv = document.createElement("div");
             msgDiv.className = `msg ${sender}`;
-            
+
             if (text === 'loading') {
                 msgDiv.innerHTML = `<div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
                 msgDiv.id = "loading-msg";
             } else {
                 msgDiv.innerText = text;
             }
-            
+
             chat.appendChild(msgDiv);
             chat.scrollTop = chat.scrollHeight; // Auto-scroll to bottom
         }
@@ -621,7 +698,7 @@
             const questionInput = document.getElementById("question");
             const questionText = questionInput.value.trim();
             const askBtn = document.getElementById("askBtn");
-            
+
             if (!videoInput) {
                 alert("Please enter a YouTube Video URL or ID");
                 document.getElementById("video").focus();
@@ -657,7 +734,7 @@
             appendMessage('ai', 'loading');
 
             try {
-                const res = await fetch("http://127.0.0.1:5000/ask", {
+                const res = await fetch("https://youtube-ai-assistant-rag.onrender.com/ask", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -675,7 +752,7 @@
                 }
 
                 const data = await res.json();
-                
+
                 // Show AI answer
                 if (data.answer) {
                     appendMessage('ai', data.answer);
@@ -705,10 +782,10 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             particles = [];
-            
+
             // Adjust particle count based on screen size
             const numParticles = Math.min(Math.floor(window.innerWidth / 15), 100);
-            
+
             for (let i = 0; i < numParticles; i++) {
                 particles.push(new Particle());
             }
@@ -771,4 +848,5 @@
         animateParticles();
     </script>
 </body>
+
 </html>
