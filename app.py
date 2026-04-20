@@ -38,3 +38,23 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 10000))  # Render dynamic port deta hai
     app.run(host="0.0.0.0", port=port)
+
+
+
+
+
+
+"""imp things
+
+{
+  "video_id": "dQw4w9WgXcQ", == song
+  "question": "summarize"
+}
+
+8ext9G7xspg ==  JavaScript Crash Course
+kqtD5dpn9C8 == Python Full Course
+
+
+versel link or live link = youtube-ai-assistant-rag.vercel.app
+
+"""
