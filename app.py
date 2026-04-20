@@ -8,6 +8,12 @@ CORS(app)
 # -----------------------------
 # ROUTE
 # -----------------------------
+
+@app.route("/")
+def home():
+    return "Backend running"
+
+
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.json

@@ -734,7 +734,12 @@
             appendMessage('ai', 'loading');
 
             try {
-                const res = await fetch("https://youtube-ai-assistant-rag.onrender.com/ask", {
+                
+                const API_URL = window.location.hostname === "localhost"
+                    ? "http://127.0.0.1:5000"
+                    : "https://youtube-ai-assistant-rag.onrender.com";
+
+                const res = await fetch(`${API_URL}/ask`,  {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
